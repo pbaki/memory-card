@@ -1,8 +1,13 @@
 import { useState } from "react";
 import "./App.css";
+import MemoryCard from "./memory-card";
 
 function App() {
-  return <> AAA</>;
+  return (
+    <>
+      <MemoryCard />
+    </>
+  );
 }
 
 export default App;
