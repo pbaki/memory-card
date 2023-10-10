@@ -1,0 +1,25 @@
+.gameContainer {
+  max-height: 100%;
+  max-width: 100%;
+  margin-top: 15%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.cardsContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0px 15px;
+  gap: 15px;
+}
+.cardsContainer div {
+  aspect-ratio: 1 / 1;
+  flex: 0 0 calc(20% - 30px);
+}
+.cardsContainer div img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
