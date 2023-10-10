@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./memory-card.css";
 
 function MemoryCard() {
   const [cards, setCards] = useState([]);
@@ -7,7 +8,7 @@ function MemoryCard() {
   useEffect(() => {
     async function getGifs() {
       const response = await fetch(
-        "https://api.giphy.com/v1/gifs/search?api_key=mMtQHgFTpMeJ16MX4IkYVtqrMhVChGNa&q=cheeseburgers"
+        "https://api.giphy.com/v1/gifs/search?api_key=mMtQHgFTpMeJ16MX4IkYVtqrMhVChGNa&q=cats"
       );
       const responseData = await response.json();
       function getRandomGifs(numberOfGifs = 5) {
@@ -17,7 +18,6 @@ function MemoryCard() {
             Math.random() * (responseData.data.length - 0 + 1)
           );
           let imgUrl = responseData.data[random].images.original.url;
-          newCards;
           if (newCards.includes(imgUrl)) {
             newCards.splice(newCards.indexOf(imgUrl), 1);
             i -= 1;
@@ -40,15 +40,14 @@ function MemoryCard() {
       <div className="cardsContainer">
         {cards.map((item) => {
           return (
-            <>
+            <div key={item.key}>
               <img
                 src={item.imgUrl}
                 alt="Random Gifs"
                 key={item.key}
-                width={100}
-                height={100}
+                id="card"
               ></img>
-            </>
+            </div>
           );
         })}
       </div>
