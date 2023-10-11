@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import "./memory-card.css";
 
+const initialCardNumber = 4;
+
 function MemoryCard() {
   const [cards, setCards] = useState([]);
   const [usedCards, setUsedCards] = useState([]);
-  const [cardNumber, setcardNumber] = useState(5);
+  const [cardNumber, setcardNumber] = useState(initialCardNumber);
   const [gameMode, setGameMode] = useState(1);
 
   useEffect(() => {
@@ -39,22 +41,26 @@ function MemoryCard() {
   }, [cardNumber]);
 
   useEffect(() => {
+    let ifLost = false;
     //When game is lost, it resets
     if (usedCards.length > 1) {
       for (let item of usedCards) {
         if (usedCards.indexOf(item) !== usedCards.lastIndexOf(item)) {
-          if (cardNumber !== 5) {
-            setcardNumber(5);
+          if (cardNumber !== initialCardNumber) {
+            setcardNumber(initialCardNumber);
           }
           setUsedCards([]);
-          setGameMode(0);
+          setGameMode(1);
+          ifLost = true;
         }
       }
-    } else if (
-      //When game is won, it goes level further
+    }
+    //When game is won, it goes level further
+    if (
       cards.length > 0 &&
       usedCards.length > 0 &&
-      usedCards.length === cards.length
+      usedCards.length === cards.length &&
+      ifLost == false
     ) {
       setcardNumber(cardNumber + 1);
       setUsedCards([]);
@@ -64,7 +70,7 @@ function MemoryCard() {
 
   //Resetting game on level 30
   if (cardNumber === 30) {
-    setcardNumber(5);
+    setcardNumber(initialCardNumber);
     setUsedCards([]);
     setGameMode(0);
   }
