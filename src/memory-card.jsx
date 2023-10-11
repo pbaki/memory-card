@@ -74,6 +74,16 @@ function MemoryCard() {
     setUsedCards([]);
     setGameMode(0);
   }
+
+  function shuffleArray(arrayToShuffle) {
+    const array = [...arrayToShuffle];
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
   return (
     <div className="gameContainer">
       <div className="statsContainer">
@@ -91,6 +101,7 @@ function MemoryCard() {
                 id="card"
                 onClick={() => {
                   setUsedCards([...usedCards, item]);
+                  setCards(shuffleArray(cards));
                 }}
               ></img>
             </div>
