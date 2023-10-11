@@ -3,7 +3,9 @@ import "./memory-card.css";
 
 function MemoryCard() {
   const [cards, setCards] = useState([]);
-  const [gameMode, setGameMode] = useState(0);
+  const [usedCards, setUsedCards] = useState([]);
+  const [cardNumber, setcardNumber] = useState(5);
+  const [gameMode, setGameMode] = useState(1);
 
   useEffect(() => {
     async function getGifs() {
@@ -11,32 +13,67 @@ function MemoryCard() {
         "https://api.giphy.com/v1/gifs/search?api_key=mMtQHgFTpMeJ16MX4IkYVtqrMhVChGNa&q=cats"
       );
       const responseData = await response.json();
-      function getRandomGifs(numberOfGifs = 5) {
+      function getRandomGifs(numberOfGifs) {
         let newCards = [];
+        let usedUrls = [];
         for (let i = 0; i < numberOfGifs; i++) {
-          let random = Math.floor(
-            Math.random() * (responseData.data.length - 0 + 1)
-          );
+          let random = Math.floor(Math.random() * responseData.data.length);
           let imgUrl = responseData.data[random].images.original.url;
-          if (newCards.includes(imgUrl)) {
-            newCards.splice(newCards.indexOf(imgUrl), 1);
+          if (usedUrls.includes(imgUrl)) {
+            console.log("it has it");
             i -= 1;
+          } else {
+            newCards.push({ imgUrl: imgUrl, key: newCards.length });
+            usedUrls.push(imgUrl);
           }
-          newCards.push({ imgUrl: imgUrl, key: newCards.length });
         }
         return newCards;
       }
-      let rendomizedGifsArray = getRandomGifs();
+      let rendomizedGifsArray = getRandomGifs(cardNumber);
       setCards(rendomizedGifsArray);
     }
     getGifs();
     return () => {
       setCards([]);
     };
-  }, []);
+  }, [cardNumber]);
+
+  useEffect(() => {
+    //When game is lost, it resets
+    if (usedCards.length > 1) {
+      for (let item of usedCards) {
+        if (usedCards.indexOf(item) !== usedCards.lastIndexOf(item)) {
+          if (cardNumber !== 5) {
+            setcardNumber(5);
+          }
+          setUsedCards([]);
+          setGameMode(0);
+        }
+      }
+    } else if (
+      //When game is won, it goes level further
+      cards.length > 0 &&
+      usedCards.length > 0 &&
+      usedCards.length === cards.length
+    ) {
+      setcardNumber(cardNumber + 1);
+      setUsedCards([]);
+      setGameMode(gameMode + 1);
+    }
+  }, [usedCards]);
+
+  //Resetting game on level 30
+  if (cardNumber === 30) {
+    setcardNumber(5);
+    setUsedCards([]);
+    setGameMode(0);
+  }
   return (
     <div className="gameContainer">
-      <div className="statsContainer"></div>
+      <div className="statsContainer">
+        <Score score={usedCards.length} />
+        <Level level={gameMode} />
+      </div>
       <div className="cardsContainer">
         {cards.map((item) => {
           return (
@@ -46,6 +83,9 @@ function MemoryCard() {
                 alt="Random Gifs"
                 key={item.key}
                 id="card"
+                onClick={() => {
+                  setUsedCards([...usedCards, item]);
+                }}
               ></img>
             </div>
           );
@@ -54,10 +94,19 @@ function MemoryCard() {
     </div>
   );
 }
-function SingleCard({ img }) {
-  return <div className="card">{/* image for game */}</div>;
+function Score({ score }) {
+  return (
+    <div className="score">
+      <h2>Score : {score}</h2>
+    </div>
+  );
 }
-function Score() {}
-function Level() {}
+function Level({ level }) {
+  return (
+    <div className="level">
+      <h2>Level : {level}</h2>
+    </div>
+  );
+}
 
 export default MemoryCard;
