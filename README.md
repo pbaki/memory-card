@@ -3,4 +3,4 @@ Memory card game, where You need to select each gif exactly once to the to the n
 <br>
 Gifs are taken from Giphy API, then randomized .
 <br>
-Results Can be seen on Github Pages: [[link text itself](https://pbaki.github.io/memory-card/)]
+Results Can be seen on Github Pages: [[https://pbaki.github.io/memory-card](https://pbaki.github.io/memory-card/)]
