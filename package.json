@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://pbaki.github.io/memory-card",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
