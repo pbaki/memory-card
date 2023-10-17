@@ -8,6 +8,7 @@ function MemoryCard() {
   const [usedCards, setUsedCards] = useState([]);
   const [cardNumber, setcardNumber] = useState(initialCardNumber);
   const [gameMode, setGameMode] = useState(1);
+  const [apiData, setAPIData] = useState(null);
 
   useEffect(() => {
     async function getGifs() {
@@ -15,30 +16,33 @@ function MemoryCard() {
         "https://api.giphy.com/v1/gifs/search?api_key=mMtQHgFTpMeJ16MX4IkYVtqrMhVChGNa&q=cats"
       );
       const responseData = await response.json();
-      function getRandomGifs(numberOfGifs) {
-        let newCards = [];
-        let usedUrls = [];
-        for (let i = 0; i < numberOfGifs; i++) {
-          let random = Math.floor(Math.random() * responseData.data.length);
-          let imgUrl = responseData.data[random].images.original.url;
-          if (usedUrls.includes(imgUrl)) {
-            console.log("it has it");
-            i -= 1;
-          } else {
-            newCards.push({ imgUrl: imgUrl, key: newCards.length });
-            usedUrls.push(imgUrl);
-          }
+      setAPIData(responseData);
+    }
+    getGifs();
+  }, []);
+
+  useEffect(() => {
+    function getRandomGifs(numberOfGifs) {
+      let newCards = [];
+      let usedUrls = [];
+      for (let i = 0; i < numberOfGifs; i++) {
+        let random = Math.floor(Math.random() * apiData.data.length);
+        let imgUrl = apiData.data[random].images.original.url;
+        if (usedUrls.includes(imgUrl)) {
+          console.log("it has it");
+          i -= 1;
+        } else {
+          newCards.push({ imgUrl: imgUrl, key: newCards.length });
+          usedUrls.push(imgUrl);
         }
-        return newCards;
       }
+      return newCards;
+    }
+    if (apiData !== null) {
       let rendomizedGifsArray = getRandomGifs(cardNumber);
       setCards(rendomizedGifsArray);
     }
-    getGifs();
-    return () => {
-      setCards([]);
-    };
-  }, [cardNumber]);
+  }, [apiData, cardNumber]);
 
   useEffect(() => {
     let ifLost = false;
